@@ -1,35 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import '../styles/Navbar.css';  // Importing the CSS file
 
 const Navbar = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
   return (
-    <nav style={styles.nav}>
-      <h2 style={styles.logo}>Troy</h2>
-      <div>
-        <Link to="/" style={styles.link}>Home</Link>
-        <Link to="/admin" style={styles.link}>Admin</Link>
+    <nav className="navbar">
+      <Link to="/" className="logo">Troy</Link>
+      <div className={`nav-links ${isMobileMenuOpen ? 'active' : ''}`}>
+        <Link to="/" className="active">Home</Link>
+        <Link to="/admin">Admin</Link>
+      </div>
+      <div className={`hamburger ${isMobileMenuOpen ? 'active' : ''}`} onClick={toggleMobileMenu}>
+        ☰
       </div>
     </nav>
   );
-};
-
-const styles = {
-  nav: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    padding: '20px',
-    background: '#222',
-    color: '#fff',
-  },
-  logo: {
-    margin: 0,
-  },
-  link: {
-    color: '#fff',
-    textDecoration: 'none',
-    marginLeft: '20px',
-    fontSize: '16px',
-  }
 };
 
 export default Navbar;

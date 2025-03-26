@@ -50,7 +50,7 @@ app.post('/api/users/signup', upload.single('img'), (req, res) => {
   }
 
   const { name, age, snap, bio } = req.body;
-  const imgUrl = '/uploads/' + req.file.filename;  // Image URL (relative path)
+  const imgUrl = '/uploads/' + req.file.filename;  
 
   const newUser = new User({
     name,

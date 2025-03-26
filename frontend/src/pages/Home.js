@@ -14,6 +14,16 @@ function Home() {
         <p>
         En eksklusiv plattform der du kan vise interesse og bli del av noe unikt. Kun for utvalda.
         </p>
+        <p>
+        En eksklusiv plattform der du kan vise interesse og bli del av noe unikt. Kun for utvalda.
+        </p>
+        <p>
+        En eksklusiv plattform der du kan vise interesse og bli del av noe unikt. Kun for utvalda.
+        </p>
+        <p>
+        En eksklusiv plattform der du kan vise interesse og bli del av noe unikt. Kun for utvalda.
+        </p>
+
         <button onClick={() => setShowModal(true)}>Vis intresse</button>
       </div>
 

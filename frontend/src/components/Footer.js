@@ -1,21 +1,12 @@
 import React from 'react';
+import '../styles/Footer.css';  // Import the CSS file
 
 const Footer = () => {
   return (
-    <footer style={styles.footer}>
-      <p>© {new Date().getFullYear()} Troy by Pjatte1337</p>
+    <footer className="footer">
+      <p className="footer-text">© {new Date().getFullYear()} Troy by <a href="https://github.com/Pjatte1337" target="_blank" rel="noopener noreferrer">Pjatte1337</a></p>
     </footer>
   );
-};
-
-const styles = {
-  footer: {
-    marginTop: '80px',
-    padding: '20px',
-    textAlign: 'center',
-    background: '#eee',
-    color: '#444',
-  }
 };
 
 export default Footer;

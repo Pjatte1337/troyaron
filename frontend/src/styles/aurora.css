@@ -1,58 +1,58 @@
 /* Aurora background from Aceternity */
 
 .aurora-wrapper {
-    position: relative;
-    min-height: 100vh;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    text-align: center;
-    background: #000; /* fallback */
-    color: white;
-  }
-  
-  .aurora-bg {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    background: radial-gradient(800px circle at 0% 0%, #00ffa1, transparent 80%),
-                radial-gradient(600px circle at 100% 100%, #00ffe7, transparent 80%),
-                radial-gradient(500px circle at 50% 50%, #6200ff, transparent 80%);
-    filter: blur(80px);
-    opacity: 0.3;
-  }
-  
-  .aurora-content {
-    position: relative;
-    z-index: 1;
-    max-width: 500px;
-  }
-  
-  .aurora-content h1 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-  }
-  
-  .aurora-content p {
-    font-size: 1.1rem;
-    margin-bottom: 2rem;
-    line-height: 1.5;
-  }
-  
-  .aurora-content button {
-    padding: 12px 24px;
-    font-size: 1rem;
-    background: white;
-    color: black;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.2s;
-  }
-  
-  .aurora-content button:hover {
-    background: #eee;
-  }
-  
+  position: relative;
+  display: flex;
+  flex-direction: column; /* Ensure the content is aligned vertically */
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: #000; /* fallback */
+  color: white;
+  padding: 2rem;
+  flex-grow: 1; /* Allow this to take available space */
+}
+
+.aurora-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(800px circle at 0% 0%, #00ffa1, transparent 80%),
+              radial-gradient(600px circle at 100% 100%, #00ffe7, transparent 80%),
+              radial-gradient(500px circle at 50% 50%, #6200ff, transparent 80%);
+  filter: blur(80px);
+  opacity: 0.3;
+}
+
+.aurora-content {
+  position: relative;
+  z-index: 1;
+  max-width: 500px;
+  width: 100%;
+}
+
+.aurora-content h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.aurora-content p {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+.aurora-content button {
+  padding: 12px 24px;
+  font-size: 1rem;
+  background: white;
+  color: black;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.aurora-content button:hover {
+  background: #eee;
+}
