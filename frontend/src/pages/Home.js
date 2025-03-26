@@ -1,17 +1,24 @@
 import React, { useState } from 'react';
 import SignupModal from '../components/SignupModal';
+import '../styles/aurora.css';
 
 function Home() {
   const [showModal, setShowModal] = useState(false);
 
   return (
-    <div style={{ padding: '40px' }}>
-      <h1>Troy</h1>
-      <p>Lite info om projektet Troy...</p>
-      <button onClick={() => setShowModal(true)}>Vis intresse</button>
+    <main className="aurora-wrapper">
+      <div className="aurora-bg" />
+
+      <div className="aurora-content">
+        <h1>Projekt Troy</h1>
+        <p>
+        En eksklusiv plattform der du kan vise interesse og bli del av noe unikt. Kun for utvalda.
+        </p>
+        <button onClick={() => setShowModal(true)}>Vis intresse</button>
+      </div>
 
       {showModal && <SignupModal onClose={() => setShowModal(false)} />}
-    </div>
+    </main>
   );
 }
 

@@ -1,69 +1,108 @@
-import React, { useState } from "react";
-import axios from "axios";
-import "./SignupModal.css";
+import React, { useState } from 'react';
+import axios from 'axios';
+import '../styles/SignupModal.css';
 
-function SignupModal({ onClose }) {
+const SignupModal = ({ onClose }) => {
   const [form, setForm] = useState({
-    name: "",
-    age: "",
-    snap: "",
-    bio: "",
-    img: "",
+    name: '',
+    age: '',
+    snap: '',
+    bio: '',
+    img: null, // Store the file here
   });
+  const [preview, setPreview] = useState(null); // For image preview
 
-  const [submitted, setSubmitted] = useState(false);
-
+  // Handle form input changes
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async () => {
+  // Handle image selection and preview
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setForm({ ...form, img: file });
+      setPreview(URL.createObjectURL(file)); // Set image preview
+    }
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+    // Create a FormData object to handle file upload
+    const formData = new FormData();
+    formData.append('name', form.name);
+    formData.append('age', form.age);
+    formData.append('snap', form.snap);
+    formData.append('bio', form.bio);
+    formData.append('img', form.img); // Attach the image file
+  
     try {
-      await axios.post(
-        "https://troyaron-backend.onrender.com/api/users/signup",
-        form
-      );
-      setSubmitted(true);
+      const res = await axios.post('https://troyaron-backend.onrender.com/api/users/signup', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      if (res.data.success) {
+        alert('Signup successful!');
+        onClose(); // Close the modal after submission
+      }
     } catch (error) {
-      alert("Something went wrong! 😬");
-      console.error(error);
+      console.error('Error submitting form:', error);
+      alert('Something went wrong!');
     }
   };
 
   return (
     <div className="modal-overlay">
       <div className="modal-box">
-        {submitted ? (
-          <div>
-            <h2>
-              Tack!{" "}
-              <span role="img" aria-label="high five">
-                🙌
-              </span>
-            </h2>
+        <h2 className="modal-title">Vis Intresse</h2>
 
-            <p>Vi har fått din info.</p>
-            <button onClick={onClose}>Stäng</button>
-          </div>
-        ) : (
-          <div>
-            <h2>Vis Intresse</h2>
-            <input name="name" placeholder="Namn" onChange={handleChange} />
-            <input name="age" placeholder="Ålder" onChange={handleChange} />
-            <input name="snap" placeholder="Snapchat" onChange={handleChange} />
-            <textarea
-              name="bio"
-              placeholder="Bio"
-              onChange={handleChange}
-            ></textarea>
-            <input name="img" placeholder="Bild-URL" onChange={handleChange} />
-            <button onClick={handleSubmit}>Skicka</button>
-            <button onClick={onClose}>Avbryt</button>
-          </div>
-        )}
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="name"
+            placeholder="Name"
+            value={form.name}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="number"
+            name="age"
+            placeholder="Age"
+            value={form.age}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="text"
+            name="snap"
+            placeholder="Snapchat"
+            value={form.snap}
+            onChange={handleChange}
+            required
+          />
+          <textarea
+            name="bio"
+            placeholder="Bio"
+            value={form.bio}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="file"
+            name="img"
+            accept="image/*"
+            onChange={handleImageChange}
+            required
+          />
+          {preview && <img src={preview} alt="preview" style={{ width: '100px', height: '100px' }} />}
+          <button type="submit">Submit</button>
+          <button type="button" onClick={onClose}>Cancel</button>
+        </form>
       </div>
     </div>
   );
-}
+};
 
 export default SignupModal;

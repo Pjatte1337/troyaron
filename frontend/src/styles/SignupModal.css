@@ -1,0 +1,97 @@
+/* Overlay */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+/* Modal */
+.modal-box {
+  background: white;
+  width: 100%;
+  max-width: 420px;
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  z-index: 1001;
+  animation: fadeIn 0.3s ease-out;
+  box-sizing: border-box;
+}
+
+/* Fade animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Inputs */
+.modal-box input,
+.modal-box textarea {
+  width: 100%;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.2s ease;
+  box-sizing: border-box;
+}
+
+.modal-box input:focus,
+.modal-box textarea:focus {
+  border-color: #000;
+}
+
+/* Buttons */
+.modal-box button {
+  padding: 12px 20px;
+  margin: 8px 4px 0 4px;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+/* Submit button */
+.modal-box button:first-of-type {
+  background-color: #000;
+  color: white;
+}
+
+/* Cancel button */
+.modal-box button:last-of-type {
+  background-color: #f2f2f2;
+  color: #333;
+}
+
+.modal-box button:first-of-type:hover {
+  background-color: #222;
+}
+
+.modal-box button:last-of-type:hover {
+  background-color: #e2e2e2;
+}
+
+
+.modal-title {
+  color: #000;
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+}
