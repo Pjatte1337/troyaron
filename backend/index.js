@@ -21,18 +21,19 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Ensure the 'uploads' folder exists, if not create it
-const uploadsDir = path.join(__dirname, 'uploads');
+const uploadsDir = path.join(__dirname, 'uploads');  // Ensure 'uploads' folder is in the root
 if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir);
+  fs.mkdirSync(uploadsDir, { recursive: true });  // Create the folder if it doesn't exist
 }
 
 // Configure multer to save uploaded files in the 'uploads' folder
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, uploadsDir); // Ensuring files go into the correct folder
+    cb(null, uploadsDir); // Save files to the 'uploads' folder
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname);  // Unique filename
+    const uniqueSuffix = Date.now() + '-' + file.originalname;  // Use timestamp for uniqueness
+    cb(null, uniqueSuffix);  // Set file name as timestamp + original name
   },
 });
 
@@ -50,7 +51,7 @@ app.post('/api/users/signup', upload.single('img'), (req, res) => {
   }
 
   const { name, age, snap, bio } = req.body;
-  const imgUrl = '/uploads/' + req.file.filename;  
+  const imgUrl = '/uploads/' + req.file.filename;  // Store the relative file path
 
   const newUser = new User({
     name,

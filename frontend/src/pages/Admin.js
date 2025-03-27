@@ -115,17 +115,13 @@ const Admin = () => {
           {users.map((user, index) => (
             <div key={index} className="card">
               <img
-                src={`https://troyaron-backend.onrender.com${user.img}`}
+                src={`https://troyaron-backend.onrender.com${user.img}`} // Fix image URL
                 alt={user.name}
                 className="card-img"
               />
               <h3>{user.name}</h3>
-              <p>
-                <strong>Age:</strong> {user.age}
-              </p>
-              <p>
-                <strong>Snap:</strong> {user.snap}
-              </p>
+              <p><strong>Age:</strong> {user.age}</p>
+              <p><strong>Snap:</strong> {user.snap}</p>
               <p>{user.bio}</p>
             </div>
           ))}
@@ -134,5 +130,4 @@ const Admin = () => {
     </div>
   );
 };
-
 export default Admin;
