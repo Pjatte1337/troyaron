@@ -1,79 +1,73 @@
 const express = require('express');
-const path = require('path');
 const mongoose = require('mongoose');
 const multer = require('multer');
 const cors = require('cors');
-const fs = require('fs'); // To check folder existence
-const User = require('./models/User'); // Assuming User model is in models folder
-
+const fs = require('fs');
+const AWS = require('aws-sdk'); 
+const User = require('./models/User'); 
 require('dotenv').config();
 
 const app = express();
 
-// Use CORS middleware to allow cross-origin requests
-app.use(cors());  // This allows requests from any domain. You can configure it more strictly if needed.
+app.use(cors());
 
-// Serve static files from the 'uploads' directory
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-// Middleware for parsing form data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Ensure the 'uploads' folder exists, if not create it
-const uploadsDir = path.join(__dirname, 'uploads');  // Ensure 'uploads' folder is in the root
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });  // Create the folder if it doesn't exist
-}
-
-// Configure multer to save uploaded files in the 'uploads' folder
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadsDir); // Save files to the 'uploads' folder
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + file.originalname;  // Use timestamp for uniqueness
-    cb(null, uniqueSuffix);  // Set file name as timestamp + original name
-  },
+const s3 = new AWS.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_REGION,
 });
 
+const storage = multer.memoryStorage(); 
 const upload = multer({ storage: storage });
 
-// MongoDB connection
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected'))
-  .catch(err => console.error(err));
+  .catch(err => console.error('MongoDB connection error:', err));
 
-// Route for handling user signup and image upload
 app.post('/api/users/signup', upload.single('img'), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ success: false, message: 'No image file uploaded' });
   }
 
   const { name, age, snap, bio } = req.body;
-  const imgUrl = '/uploads/' + req.file.filename;  // Store the relative file path
 
-  const newUser = new User({
-    name,
-    age,
-    snap,
-    bio,
-    img: imgUrl,  // Save the relative path in the database
+  const params = {
+    Bucket: process.env.AWS_S3_BUCKET_NAME,
+    Key: Date.now() + '-' + req.file.originalname, 
+    Body: req.file.buffer,
+    ContentType: req.file.mimetype, 
+    ACL: 'public-read', 
+  };
+
+  s3.upload(params, (err, data) => {
+    if (err) {
+      return res.status(500).json({ success: false, message: 'Error uploading to S3', error: err.message });
+    }
+
+    const imgUrl = data.Location; 
+    const newUser = new User({
+      name,
+      age,
+      snap,
+      bio,
+      img: imgUrl, 
+    });
+
+    newUser.save()
+      .then(() => res.json({ success: true, message: 'Signup successful', user: newUser }))
+      .catch((err) => res.status(500).json({ success: false, message: 'Error saving user', error: err.message }));
   });
-
-  newUser.save()
-    .then(() => res.json({ success: true }))
-    .catch((err) => res.status(500).json({ success: false, error: err.message }));
 });
 
-// Route to fetch all users for admin panel
 app.get('/api/users', (req, res) => {
   User.find()
     .then(users => res.json(users))
-    .catch(err => res.status(500).json({ success: false, error: err.message }));
+    .catch(err => res.status(500).json({ success: false, message: 'Error fetching users', error: err.message }));
 });
 
-// Login route for admin authentication
 app.post('/api/auth/login', (req, res) => {
   const { username, password } = req.body;
   if (username === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD) {
@@ -82,7 +76,6 @@ app.post('/api/auth/login', (req, res) => {
   return res.status(401).json({ success: false, message: 'Unauthorized' });
 });
 
-// Basic test route for MongoDB connection
 app.get('/api/test-db', async (req, res) => {
   try {
     await mongoose.connection.db.admin().ping();
